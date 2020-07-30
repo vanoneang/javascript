@@ -1,0 +1,16 @@
+{
+  "coverageDirectory": "coverage",
+  "moduleNameMapper": {
+    "^#/(.*)$": "<rootDir>/$1"
+  },
+  "moduleFileExtensions": [
+    "js"
+  ],
+  "transform": {
+    "^.+\\.js$": "babel-jest"
+  },
+  "collectCoverage": true,
+  "collectCoverageFrom": [
+    "<rootDir>/basic/*.js"
+  ]
+}

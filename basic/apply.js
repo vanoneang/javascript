@@ -1,15 +1,13 @@
+function b() { 
+  console.log(arguments) 
+}
+
 function fn() {
   // console.log(Array.from(arguments).slice(-3));
-  console.log(arguments.length);
-
   if (arguments.length >=3) {
     const args = Array.prototype.slice.apply(arguments).slice(-3)
-    return () => {
-
-    }
+    b.apply(null, args)
   }
-  
-  
 }
 
 

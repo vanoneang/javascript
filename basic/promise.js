@@ -30,6 +30,36 @@ Promise.each = async function(arr, fn) {
   for(const item of arr) await fn(item);
 }
 
+// [[P1, p2], [p3, p4], [p5, p6]]
+Promise.trunk = function(groups) {
+  let results = []
+
+  return (function () {
+    let fn = arguments.callee
+    let group = groups.shift()
+
+    // 退出机制
+    if (!group) {
+      return Promise.resolve(results)
+    }
+
+    let promises = []
+    group.forEach((task) => {
+      promises.push(Promise.resolve(task))
+    })
+
+    return Promise.all(promises).then(res => {
+      results.push(res)
+      return fn()
+    })
+
+  }())
+}
+
+
+Promise.trunk([[p1, p2], [p3, p4], [p5, p6]]).then((res) => {
+  console.log(res)
+})
 
 
 Promise.each([p1, p2, p3], async (res) => {
@@ -37,29 +67,3 @@ Promise.each([p1, p2, p3], async (res) => {
 }).then(res1 => {
   console.log('res1', res1);
 })
-
-// Promise.dispatch = function(groups) {
-//   var results = []
-//   return (function () {
-//       var fun = arguments.callee, group = groups.shift()
-//       if (!group) {
-//           return Promise.resolve(results)
-//       }
-
-//       var promises = []
-//       group.forEach(function (task) {
-//           promises.push(
-//               Promise.resolve(task)
-//           )
-//       })
-
-//       return Promise.all(promises).then(function (rets) {
-//           results.push(rets)
-//           return fun()
-//       })
-//   }())
-// }
-
-// Promise.dispatch([[P1, p2], [p3, p4], [p5, p6]]).then(res) => {
-//   console.log(res)
-// }

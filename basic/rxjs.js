@@ -1,5 +1,5 @@
 const Rx = require('rxjs/Rx')
-const { concatMap } = require('rxjs/operators')
+const { concatMap, switchMap, map } = require('rxjs/operators')
 var Observable = Rx.Observable;
 
 
@@ -13,29 +13,45 @@ const fakeHTTPRequest = (() => {
   }
 })();
 
+// const subject = new Rx.BehaviorSubject(1);
+const subject = new Rx.Subject();
 
-const observable$ = Rx.Observable.create((observer) => {
-  fakeHTTPRequest()
-    .then(response => {
-      observer.next( response )
-      observer.complete();
-    } )
-    .catch( ( error ) => {
-        observer.error( error );
-    } );
+// subject.value().then(console.log)
+
+// const obs = Observable.fromPromise(fakeHTTPRequest)
+
+subject.pipe(
+  map(() => fakeHTTPRequest())
+).subscribe(async res => {
+  console.log('Fin', await res)
 })
+  
+subject.next()
+subject.next()
+subject.next()
+// const observable$ = Rx.Observable.create((observer) => {
+//   fakeHTTPRequest()
+//     .then(response => {
+//       observer.next( response )
+//       observer.complete();
+//     } )
+//     .catch( ( error ) => {
+//         observer.error( error );
+//     } );
+// })
 
-// observable$.pipe(concatMap(fakeHTTPRequest ))
+// // observable$.pipe(concatMap(fakeHTTPRequest ))
 
-observable$.subscribe( {
-  next: data => console.log( '[data] => ', data ),
-  complete: data => console.log( '[complete]' ),
-} );
+// observable$.subscribe( {
+//   next: data => console.log( '[data] => ', data ),
+//   complete: data => console.log( '[complete]' ),
+// } );
 
+// fakeHTTPRequest()()
 
-(async () => { console.log(await fakeHTTPRequest()) })();
-(async () => { console.log(await fakeHTTPRequest()) })();
-(async () => { console.log(await fakeHTTPRequest()) })();
+// (async () => { console.log(await fakeHTTPRequest()) })();
+// (async () => { console.log(await fakeHTTPRequest()) })();
+// (async () => { console.log(await fakeHTTPRequest()) })();
 
 // function mockHTTPRequest(url) {
 //     return Observable.of(`Response from ${url}`)

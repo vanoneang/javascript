@@ -19,6 +19,8 @@ const request = async () => {
   let c = ++counter
   return new Promise((r) => {
     fakeHTTPRequest().then(res => {
+      console.log(c, counter);
+      
       if (c !== counter) return r(response)
       response = res
       return r(response)

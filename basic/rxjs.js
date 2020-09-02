@@ -1,5 +1,5 @@
 const Rx = require('rxjs/Rx')
-const { concatMap, switchMap, map } = require('rxjs/operators')
+const { concatMap, switchMap, map, last } = require('rxjs/operators')
 var Observable = Rx.Observable;
 
 
@@ -14,21 +14,38 @@ const fakeHTTPRequest = (() => {
 })();
 
 // const subject = new Rx.BehaviorSubject(1);
-const subject = new Rx.Subject();
 
 // subject.value().then(console.log)
 
 // const obs = Observable.fromPromise(fakeHTTPRequest)
 
-subject.pipe(
-  map(() => fakeHTTPRequest())
-).subscribe(async res => {
-  console.log('Fin', await res)
-})
+// subject.pipe(
+  //   map(() => fakeHTTPRequest()),
+  // ).subscribe(async res => {
+    //   console.log('Fin', res)
+// })
+let result
+let counter = 0
+const subject = new Rx.BehaviorSubject();
+
+const request = async () => {
+  subject.next({
+    counter,
+    key: ++counter,
+    value: await fakeHTTPRequest()
+  })
+  subject.subscribe(res => {
+    if (res.key === counter) result = res.value
+  })
+  return result
+}
   
-subject.next()
-subject.next()
-subject.next()
+(async () => { console.log(await request()) })();
+(async () => { console.log(await request()) })();
+(async () => { console.log(await request()) })();
+
+// subject.next()
+// subject.next()
 // const observable$ = Rx.Observable.create((observer) => {
 //   fakeHTTPRequest()
 //     .then(response => {
@@ -49,9 +66,6 @@ subject.next()
 
 // fakeHTTPRequest()()
 
-// (async () => { console.log(await fakeHTTPRequest()) })();
-// (async () => { console.log(await fakeHTTPRequest()) })();
-// (async () => { console.log(await fakeHTTPRequest()) })();
 
 // function mockHTTPRequest(url) {
 //     return Observable.of(`Response from ${url}`)

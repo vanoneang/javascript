@@ -1,2 +1,3 @@
-# javascript
+# JavaScript
+
 knowledge of JavaScript 

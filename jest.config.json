@@ -9,8 +9,9 @@
   "transform": {
     "^.+\\.js$": "babel-jest"
   },
-  "collectCoverage": true,
+  "collectCoverage": false,
   "collectCoverageFrom": [
     "<rootDir>/basic/*.js"
-  ]
+  ],
+  "setupFilesAfterEnv": ["./setup-test.js"]
 }
